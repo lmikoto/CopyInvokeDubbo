@@ -5,15 +5,8 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiMethod;
-import com.intellij.psi.PsiType;
-import com.intellij.psi.impl.source.PsiClassReferenceType;
-import com.intellij.psi.impl.source.PsiMethodImpl;
-import com.intellij.psi.impl.source.PsiParameterImpl;
-import org.jetbrains.annotations.NotNull;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.source.*;
 
 public class CopyInvokeDubbo extends AnAction {
 
@@ -30,8 +23,20 @@ public class CopyInvokeDubbo extends AnAction {
                 PsiParameterImpl pImpl = (PsiParameterImpl)p;
                 String name = pImpl.getName();
                 PsiClassReferenceType type = (PsiClassReferenceType)pImpl.getType();
-                String typeClassName = type.getClassName();
-                System.out.println(pImpl);
+
+                PsiClassType.ClassResolveResult classResolveResult = type.resolveGenerics();
+                PsiClassImpl typeClass = (PsiClassImpl)classResolveResult.getElement();
+
+                PsiField[] allFields = typeClass.getAllFields();
+
+                for (PsiField psiField: allFields){
+                    PsiFieldImpl field = (PsiFieldImpl)psiField;
+                    PsiType type2 = field.getType();
+                    PsiType type1 = psiField.getType();
+                }
+
+
+                System.out.println(typeClass);
             }
             System.out.println(method);
         }
