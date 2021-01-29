@@ -92,6 +92,14 @@ public class EditeDialog extends JDialog {
 
     private TreeTableNode createData(ClassEntity classEntity) {
         DefaultMutableTreeTableNode root = new DefaultMutableTreeTableNode(classEntity);
+        createDataNode(root,classEntity);
         return root;
+    }
+
+    private void createDataNode(DefaultMutableTreeTableNode root, ClassEntity classEntity) {
+        for(FieldEntity field: classEntity.getFields()){
+            DefaultMutableTreeTableNode node = new DefaultMutableTreeTableNode(field);
+            root.add(node);
+        }
     }
 }
