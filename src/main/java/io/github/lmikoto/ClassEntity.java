@@ -1,17 +1,12 @@
 package io.github.lmikoto;
 
-import com.intellij.psi.PsiClass;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ClassEntity implements Selector, CellProvider {
-
-    private PsiClass psiClass;
-
-    private String fieldTypeSuffix;
+public class ClassEntity implements CellProvider {
 
     private String className;
 
@@ -28,13 +23,6 @@ public class ClassEntity implements Selector, CellProvider {
     public String getQualifiedName() {
         return className;
     }
-
-    @Override
-    public void setSelect(boolean select) {
-        setGenerate(select);
-    }
-
-
 
     @Override
     public String getCellTitle(int index) {

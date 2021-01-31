@@ -64,7 +64,6 @@ public class FiledTreeTableModel extends DefaultTreeTableModel {
             Object o = mutableNode.getUserObject();
             if (o != null && o instanceof CellProvider) {
                 CellProvider cellProvider = (CellProvider) o;
-
                 cellProvider.setValueAt(column,value.toString());
             }
         }

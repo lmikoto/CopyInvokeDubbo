@@ -3,9 +3,7 @@ package io.github.lmikoto;
 import lombok.Data;
 
 @Data
-public class FieldEntity implements Selector, CellProvider {
-
-    protected String key;
+public class FieldEntity implements CellProvider {
 
     protected String type;
 
@@ -15,19 +13,11 @@ public class FieldEntity implements Selector, CellProvider {
 
     protected ClassEntity targetClass;
 
-    protected boolean generate = true;
-
     public String getFullNameType() {
         if (targetClass != null) {
             return targetClass.getQualifiedName();
         }
         return type;
-    }
-
-
-    @Override
-    public void setSelect(boolean select) {
-        setGenerate(select);
     }
 
     @Override

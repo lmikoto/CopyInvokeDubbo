@@ -3,8 +3,8 @@ plugins {
     id 'org.jetbrains.intellij' version '0.6.5'
 }
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'io.github.lmikoto'
+version '1.0.0'
 
 repositories {
     mavenCentral()
