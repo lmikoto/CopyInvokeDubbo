@@ -29,7 +29,7 @@ public class EditeDialog extends JDialog {
     private void initListener() {
         ClassEntity classEntity = new ClassEntity();
         FieldEntity fieldEntity = new FieldEntity();
-        fieldEntity.setFieldName("嘤嘤嘤");
+        fieldEntity.setKey("test");
         classEntity.setFields(Arrays.asList(fieldEntity));
         JXTreeTable treeTable = new JXTreeTable(new FiledTreeTableModel(createData(classEntity)));
         treeTable.getColumnModel().getColumn(0).setPreferredWidth(150);

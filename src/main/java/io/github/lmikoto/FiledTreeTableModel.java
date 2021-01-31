@@ -7,8 +7,8 @@ import org.jdesktop.swingx.treetable.TreeTableNode;
 
 public class FiledTreeTableModel extends DefaultTreeTableModel {
 
-    private String[] _names = {" Key ", "Value", "Data Type", " Field name "};
-    private Class[] _types = {Object.class, Object.class, Object.class, Object.class};
+    private String[] _names = {"Field", "Type", "Value"};
+    private Class[] _types = {Object.class, Object.class, Object.class};
 
 
     public FiledTreeTableModel(TreeTableNode node) {
@@ -51,7 +51,6 @@ public class FiledTreeTableModel extends DefaultTreeTableModel {
             if (o != null && o instanceof CellProvider) {
                 CellProvider cellProvider = (CellProvider) o;
                 value = cellProvider.getCellTitle(column);
-
             }
         }
         return value;
@@ -75,9 +74,6 @@ public class FiledTreeTableModel extends DefaultTreeTableModel {
     @Override
     public boolean isCellEditable(Object node, int column) {
         if (column == 2) {
-            return true;
-        }
-        if (column == 3) {
             return true;
         }
         return false;

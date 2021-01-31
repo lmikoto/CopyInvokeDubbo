@@ -59,7 +59,7 @@ public class FieldEntity implements Selector, CellProvider {
                 result = getValue();
                 break;
             case 2:
-                result = getBriefType();
+                result = "getBriefType()";
                 break;
             case 3:
                 result = getFieldName();
