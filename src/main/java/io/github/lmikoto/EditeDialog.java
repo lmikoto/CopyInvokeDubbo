@@ -1,5 +1,7 @@
 package io.github.lmikoto;
 
+import com.intellij.notification.*;
+import com.intellij.openapi.ui.Messages;
 import org.jdesktop.swingx.JXTreeTable;
 import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
 import org.jdesktop.swingx.treetable.TreeTableNode;
@@ -21,7 +23,7 @@ public class EditeDialog extends JDialog {
 
     public EditeDialog(ClassEntity classEntity,String methodQualified) {
         setContentPane(contentPane);
-        setModal(true);
+        setModal(false);
         getRootPane().setDefaultButton(buttonOK);
         initListener(classEntity,methodQualified);
     }
