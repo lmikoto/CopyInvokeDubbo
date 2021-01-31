@@ -62,10 +62,15 @@ public class DubboUtils {
                         .append(QUOTATION)
                         .append(fieldEntity.getFieldName())
                         .append(QUOTATION)
-                        .append(COLON)
-                        .append(QUOTATION)
-                        .append(fieldEntity.getValue())
-                        .append(QUOTATION);
+                        .append(COLON);
+
+                if(fieldEntity.getType().equals(String.class.getName())){
+                    builder.append(QUOTATION)
+                            .append(fieldEntity.getValue())
+                            .append(QUOTATION);
+                }else {
+                    builder.append(fieldEntity.getValue());
+                }
             }
         }
     }

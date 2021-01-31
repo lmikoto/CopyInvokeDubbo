@@ -41,9 +41,14 @@ public class CopyInvokeDubbo extends AnAction {
             ClassEntity classEntity = getClassEntity(pImpl);
 
             for (PsiField psiField: allFields){
-                PsiFieldImpl field = (PsiFieldImpl)psiField;
-                FieldEntity filedEntity = getFiledEntity(field);
-                classEntity.addField(filedEntity);
+                if(psiField instanceof PsiFieldImpl){
+                    PsiFieldImpl field = (PsiFieldImpl)psiField;
+                    FieldEntity filedEntity = getFiledEntity(field);
+                    if(filedEntity != null){
+                        classEntity.addField(filedEntity);
+                    }
+
+                }
             }
 
             EditeDialog editeDialog = new EditeDialog(classEntity, qualifiedName + "." + method.getName());
@@ -61,18 +66,24 @@ public class CopyInvokeDubbo extends AnAction {
         return classEntity;
     }
 
-    private FieldEntity getFiledEntity(PsiFieldImpl field){
+    private FieldEntity getFiledEntity(PsiField field){
         FieldEntity fieldEntity = new FieldEntity();
         fieldEntity.setFieldName(field.getName());
         PsiClass typeClass = getPsiClass(field.getType());
+        if(typeClass == null){
+            return null;
+        }
         fieldEntity.setType(typeClass.getQualifiedName());
         // todo 暂时不支持嵌套
         return fieldEntity;
     }
 
     private PsiClass getPsiClass(PsiType psiType){
-        PsiClassReferenceType type = (PsiClassReferenceType)psiType;
-        PsiClassType.ClassResolveResult resolveResult = type.resolveGenerics();
-        return resolveResult.getElement();
+        if(psiType instanceof PsiClassReferenceType){
+            PsiClassReferenceType type = (PsiClassReferenceType)psiType;
+            PsiClassType.ClassResolveResult resolveResult = type.resolveGenerics();
+            return resolveResult.getElement();
+        }
+        return null;
     }
 }
