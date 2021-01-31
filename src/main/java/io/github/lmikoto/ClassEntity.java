@@ -2,7 +2,6 @@ package io.github.lmikoto;
 
 import com.intellij.psi.PsiClass;
 import lombok.Data;
-import org.apache.http.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,22 +17,16 @@ public class ClassEntity implements Selector, CellProvider {
 
     private List<FieldEntity> fields = new ArrayList<>();
 
-    private String packName;
-
     private boolean generate = true;
 
     private boolean lock = false;
 
+    public void addField(FieldEntity fieldEntity){
+        fields.add(fieldEntity);
+    }
 
     public String getQualifiedName() {
-        String fullClassName;
-        if (!TextUtils.isEmpty(packName)) {
-            fullClassName = packName + "." + className;
-        } else {
-            fullClassName = className;
-        }
-
-        return fullClassName;
+        return className;
     }
 
     @Override
@@ -50,7 +43,7 @@ public class ClassEntity implements Selector, CellProvider {
             case 0:
                 result = getClassName();
                 break;
-            case 3:
+            case 1:
                 result = getClassName();
                 break;
         }

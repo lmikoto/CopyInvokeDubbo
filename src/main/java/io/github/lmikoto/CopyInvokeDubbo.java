@@ -7,26 +7,10 @@ import com.intellij.openapi.actionSystem.CommonDataKeys;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.compiled.ClsClassImpl;
 import com.intellij.psi.impl.source.*;
-import org.jdesktop.swingx.JXTreeTable;
-import org.jdesktop.swingx.treetable.DefaultMutableTreeTableNode;
-import org.jdesktop.swingx.treetable.TreeTableNode;
-
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
-import java.util.Arrays;
 
 public class CopyInvokeDubbo extends AnAction {
-
-    private final String INVOKE = "invoke ";
-
-    private final String DOT = ".";
-
-    private final String LEFT = "(";
-
-    private final String RIGHT = ")";
 
     @Override
     public void actionPerformed(AnActionEvent e) {
@@ -42,42 +26,53 @@ public class CopyInvokeDubbo extends AnAction {
                 return;
             }
 
+            PsiClassImpl clazz = (PsiClassImpl) method.getContainingClass();
+            String qualifiedName = clazz.getQualifiedName();
+
             if(parameters.length == 0){
-                PsiClassImpl clazz = (PsiClassImpl) method.getContainingClass();
-                String qualifiedName = clazz.getQualifiedName();
-                putClipboard(INVOKE + qualifiedName + DOT + method.getName() + LEFT + RIGHT);
+                ClipboardUtils.putClipboard(DubboUtils.getEmptyInvoker(qualifiedName,method.getName()));
                 return;
             }
 
-
-            EditeDialog editeDialog = new EditeDialog();
-            editeDialog.setSize(800,500);
-            editeDialog.setLocationRelativeTo(null);
-            editeDialog.setVisible(true);
-
-            
             PsiParameterImpl pImpl = (PsiParameterImpl)parameters[0];
-            String name = pImpl.getName();
-            PsiClassReferenceType type = (PsiClassReferenceType)pImpl.getType();
-
-            PsiClassType.ClassResolveResult classResolveResult = type.resolveGenerics();
-            PsiClassImpl typeClass = (PsiClassImpl)classResolveResult.getElement();
-
+            PsiClassImpl typeClass = (PsiClassImpl) getPsiClass(pImpl.getType());
             PsiField[] allFields = typeClass.getAllFields();
+
+            ClassEntity classEntity = getClassEntity(pImpl);
 
             for (PsiField psiField: allFields){
                 PsiFieldImpl field = (PsiFieldImpl)psiField;
-                PsiType type2 = field.getType();
-                PsiType type1 = psiField.getType();
+                FieldEntity filedEntity = getFiledEntity(field);
+                classEntity.addField(filedEntity);
             }
 
-            System.out.println(typeClass);
+            EditeDialog editeDialog = new EditeDialog(classEntity, qualifiedName + "." + method.getName());
+            editeDialog.setSize(800,500);
+            editeDialog.setLocationRelativeTo(null);
+            editeDialog.setVisible(true);
         }
     }
 
-    public static void putClipboard(String text) {
-        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        Transferable trans = new StringSelection(text);
-        clipboard.setContents(trans, null);
+    private ClassEntity getClassEntity(PsiParameterImpl param) {
+        ClassEntity classEntity = new ClassEntity();
+        PsiClassImpl psiClass = (PsiClassImpl)getPsiClass(param.getType());
+
+        classEntity.setClassName(psiClass.getQualifiedName());
+        return classEntity;
+    }
+
+    private FieldEntity getFiledEntity(PsiFieldImpl field){
+        FieldEntity fieldEntity = new FieldEntity();
+        fieldEntity.setFieldName(field.getName());
+        PsiClass typeClass = getPsiClass(field.getType());
+        fieldEntity.setType(typeClass.getQualifiedName());
+        // todo 暂时不支持嵌套
+        return fieldEntity;
+    }
+
+    private PsiClass getPsiClass(PsiType psiType){
+        PsiClassReferenceType type = (PsiClassReferenceType)psiType;
+        PsiClassType.ClassResolveResult resolveResult = type.resolveGenerics();
+        return resolveResult.getElement();
     }
 }

@@ -19,18 +19,14 @@ public class EditeDialog extends JDialog {
     private JPanel filedPanel;
     private JScrollPane sp;
 
-    public EditeDialog() {
+    public EditeDialog(ClassEntity classEntity,String methodQualified) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-        initListener();
+        initListener(classEntity,methodQualified);
     }
 
-    private void initListener() {
-        ClassEntity classEntity = new ClassEntity();
-        FieldEntity fieldEntity = new FieldEntity();
-        fieldEntity.setKey("test");
-        classEntity.setFields(Arrays.asList(fieldEntity));
+    private void initListener(ClassEntity classEntity,String methodQualified) {
         JXTreeTable treeTable = new JXTreeTable(new FiledTreeTableModel(createData(classEntity)));
         treeTable.getColumnModel().getColumn(0).setPreferredWidth(150);
         treeTable.expandAll();
@@ -51,7 +47,7 @@ public class EditeDialog extends JDialog {
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                onOK();
+                onOK(classEntity,methodQualified);
             }
         });
 
@@ -80,8 +76,8 @@ public class EditeDialog extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
-    private void onOK() {
-        // add your code here
+    private void onOK(ClassEntity classEntity,String methodQualified) {
+        ClipboardUtils.putClipboard(DubboUtils.getInvoker(classEntity,methodQualified));
         dispose();
     }
 
